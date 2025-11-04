@@ -1,0 +1,22 @@
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+BreakBeforeBraces: Attach
+AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: true
+
+SpaceBeforeParens: Always
+SpaceBeforeAssignmentOperators: true
+SpacesInParentheses: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+SpacesInContainerLiterals: falseBasedOnStyle: Google
+IndentWidth: 4
+BreakBeforeBraces: Attach
+SpaceBeforeParens: Always
+AllowShortBlocksOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
