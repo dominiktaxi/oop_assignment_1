@@ -32,3 +32,8 @@ std::unique_ptr<Measurement> Sensor::read() const
     measurement->timeStamp = ::localTime();
     return measurement;
 }
+
+Sensor::TYPE Sensor::type() const
+{
+    return _Type;
+}

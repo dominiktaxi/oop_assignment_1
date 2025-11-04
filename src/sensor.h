@@ -20,6 +20,7 @@ public:
     };
     Sensor(UNIT, TYPE, const std::string &, const MinMax &);
     std::unique_ptr<Measurement> read() const;
+    TYPE type() const;
 
 private:
     std::string _name;
