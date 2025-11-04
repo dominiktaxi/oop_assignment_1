@@ -1,5 +1,5 @@
 #pragma once
-#include "sensor.h"
+#include <string>
 #include <vector>
 struct Measurement
 {

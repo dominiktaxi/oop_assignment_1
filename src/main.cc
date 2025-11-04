@@ -13,5 +13,6 @@ int main()
   storage.addMeasurement(sensor2.read());
   storage.addMeasurement(sensor2.read());
   storage.printAll();
+  storage.statistics("humidity");
   return 0;
 }

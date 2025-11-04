@@ -17,3 +17,22 @@ void MeasurementStorage::printAll() const
         std::cout << "Measurement: " << measurement->measurement << " " << measurement->unit << std::endl << std::endl;
     }
 }
+
+void MeasurementStorage::statistics(const std::string& type) const
+{
+    float average = 0.f;
+    int amountOfReadings = 0;
+    MinMax minMax;
+    for(const auto& measurement : _measurements)
+    {
+        if (measurement->type == type )
+        {
+            average = ::average(_measurements, type);
+            amountOfReadings++;
+        }
+        minMax = ::minMax(_measurements, type);
+    }
+    std::cout << "Average: " << average << std::endl;
+    std::cout << "Amount of readings: " << amountOfReadings << std::endl;
+    std::cout << "Min value: " << minMax.min << "| Max value: " << minMax.max << std::endl;
+}
