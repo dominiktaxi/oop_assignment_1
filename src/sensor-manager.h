@@ -7,10 +7,15 @@
 class SensorManager
 {
     public:
-    SensorManager();
-    void addSensor(Sensor::UNIT, Sensor::TYPE, const std::string &, const MinMax &);
-    void readAndStore(Sensor::TYPE);
+    SensorManager(MeasurementStorage* storage);
+    void addSensor(Sensor::UNIT, Sensor::TYPE, const MinMax &);
+    void store(int i);
+    void printAll() const;
+    void printAllMeasurements() const;
+    void printByType(Sensor::TYPE) const;
+    void sortByType();
+    const std::vector<std::unique_ptr<Sensor>>& sensors() const;
     private:
     std::vector<std::unique_ptr<Sensor>> _sensors;
-    MeasurementStorage _storage;
+    MeasurementStorage* _storage;
 };

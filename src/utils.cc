@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#include "measurement.h"
 
 float randomFloat(float min, float max)
 {
@@ -29,7 +29,7 @@ float average(const std::vector<std::unique_ptr<Measurement>>& measurements, con
     {
         if(measurement->type == type)
         {
-            total += measurement->measurement;
+            total += measurement->reading;
             amount++;
         }
     }
@@ -46,14 +46,14 @@ MinMax minMax(const std::vector<std::unique_ptr<Measurement>>& measurements, con
     {
         if(measurement->type == type)
         {
-            if(!first_hit) {min = measurement->measurement;}
-            if(max < measurement->measurement)
+            if(!first_hit) {min = measurement->reading;}
+            if(max < measurement->reading)
             {
-                max = measurement->measurement;
+                max = measurement->reading;
             }
-            if(min > measurement->measurement)
+            if(min > measurement->reading)
             {
-                min = measurement->measurement;
+                min = measurement->reading;
             }
             first_hit = true;
         }

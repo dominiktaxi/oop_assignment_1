@@ -3,108 +3,51 @@
 #include "measurement-storage.h"
 #include "sensor-manager.h"
 
-void addSensor(SensorManager* manager)
+void menu(SensorManager& sensorManager, MeasurementStorage& storage)
 {
-  int choice = 0;
-  while(choice != 9)
+  int choice = -1;
+  int amountOfSensors = sensorManager.sensors().size();
+  while(choice != 0)
   {
-    std::cout << "Add sensor: \n1.TemperatureSensor\n2.HumiditySensor\n\n9. Back" << std::endl;
+    
+    std::cout << "Choose wich sensor to read and collect data from\n" << std::endl;
+    sensorManager.printAll();
+    std::cout << amountOfSensors + 1 << "Print all measurements\n0.Exit" << std::endl;
+    std::cout << amountOfSensors + 2 << "Sort by type" << std::endl;
     std::cin >> choice;
+    system("clear");
     if(std::cin.fail())
     {
+      std::cout << "Please enter a numeric value" << std::endl;
       std::cin.clear();
       std::cin.ignore();
-      system("clear");
-      std::cout << "enter 1, 2 or 9" << std::endl;
       continue;
     }
-    switch (choice)
+    else if(choice > 0 && choice <= amountOfSensors)
     {
-      case 1:
-      {
-        manager->addSensor(Sensor::UNIT::CELSIUS, Sensor::TYPE::TEMPERATURE, "thermometer", MinMax{-273.15f, 4000.f});
-        std::cout << "Thermometer added" << std::endl;
-      }
-      break;
-      case 2:
-      {
-        manager->addSensor(Sensor::UNIT::PERCENTAGE, Sensor::TYPE::HUMIDITY, "hygrometer", MinMax{0, 100});
-        std::cout << "Hygrometer added" << std::endl;
-      }
-      break;
+    sensorManager.store(choice);
+    }
+    else if ( choice == amountOfSensors + 1)
+    {
+      sensorManager.printAllMeasurements();
+    }
+    else if (choice == amountOfSensors + 2)
+    {
+      sensorManager.sortByType();
     }
   }
-}
-
-void readAndStore(SensorManager* manager)
-{
-  std::cout << "Wich sensor would you like to read and store from?\n1.Temperature\n2.Humidity" << std::endl;
-  int choice = 0;
-  while(choice != 9)
-  {
-    std::cin >> choice;
-    if(std::cin.fail())
-    {
-      std::cin.clear();
-      std::cin.ignore();
-      system("clear");
-      std::cout << "please enter a valid number" << std::endl;
-      continue;
-    }
-
-    switch(choice)
-    {
-      case 1:
-      {
-        manager->readAndStore(Sensor::TYPE::TEMPERATURE);
-      }
-      break;
-      case 2:
-      {
-        manager->readAndStore(Sensor::TYPE::HUMIDITY);
-      }
-      break;
-    }
-  }
-}
-
-void menu(SensorManager* manager)
-{
-  int choice = 0;
-  while(choice != 9)
-  {
-    std::cout << "1.Add sensor: \n2.Get Reading\n\n9. Back" << std::endl;
-    std::cin >> choice;
-    if(std::cin.fail())
-    {
-      std::cin.clear();
-      std::cin.ignore();
-      system("clear");
-      std::cout << "enter 1, 2 or 9" << std::endl;
-      continue;
-    }
-    switch (choice)
-    {
-      case 1:
-      {
-        addSensor(manager);
-      }
-      break;
-      case 2:
-      {
-        readAndStore(manager);
-      }
-      break;
-    }
-  }
+  
 }
 
 int main()
 { 
-  std::unique_ptr<SensorManager> manager;
-  std::make_unique<SensorManager>(manager);
-    menu(manager.get());
+  MeasurementStorage storage;
+  SensorManager manager(&storage);
+  manager.addSensor(Sensor::UNIT::PERCENTAGE, Sensor::TYPE::HUMIDITY, MinMax{0, 100});
+  manager.addSensor(Sensor::UNIT::CELSIUS, Sensor::TYPE::TEMPERATURE, MinMax{0, 4000});
+  storage.loadFromHDD();
+  menu(manager, storage);
 
-  
-    return 0;
+  storage.saveAlltoHDD();
+  return 0;
 }

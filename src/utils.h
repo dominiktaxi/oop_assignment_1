@@ -3,7 +3,8 @@
 #include <ctime>
 #include <random>
 #include <memory>
-#include "measurement.h"
+class Measurement;
+class Sensor;
 struct MinMax
 {
     float min;
