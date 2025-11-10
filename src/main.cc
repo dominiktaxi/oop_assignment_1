@@ -11,9 +11,9 @@ void setThreshold(Sensor::TYPE TYPE, SensorManager& manager)
   float threshold;
   while(true)
   {
-    system("clear");
     std::cout << "Set" << type <<  " threshold:" << std::endl;
     std::cin >> threshold;
+    system("clear");
     if(std::cin.fail())
     {
       std::cin.clear();

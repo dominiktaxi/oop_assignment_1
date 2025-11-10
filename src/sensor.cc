@@ -22,7 +22,7 @@ Sensor::Sensor(UNIT unit, TYPE type, const MinMax &minMax) :  _UNIT(unit), _TYPE
 std::unique_ptr<Measurement> Sensor::read() const
 {
     float reading = randomFloat(_minMax.min, _minMax.max);
-    reading = std::round(reading * 100) / 100;
+    reading = std::round(reading * 100) / 100; //round to 2 decimals
     auto measurement = std::make_unique<Measurement>();
     measurement->TYPE = _TYPE;
     measurement->type = _type;

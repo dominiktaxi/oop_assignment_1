@@ -17,13 +17,19 @@ void SensorManager::store(int i)
     std::unique_ptr<Measurement> measurement = _sensors[i - 1]->read();
     if(measurement->TYPE == Sensor::TYPE::TEMPERATURE)
     {
-        if(measurement->reading > _temperatureThreshold) {measurement->overThreshold = true;}
-        std::cout << "TEMPERATURE OVER THRESHOLD" << std::endl;
+        if(measurement->reading > _temperatureThreshold) 
+        {
+            measurement->overThreshold = true;
+            std::cout << "TEMPERATURE OVER THRESHOLD" << std::endl;
+        }
     }
     else if(measurement->TYPE == Sensor::TYPE::HUMIDITY)
     {
-        if(measurement->reading > _humidityThreshold) {measurement->overThreshold = true;}
-        std::cout << "HUMIDITY OVER THRESHOLD" << std::endl;
+        if(measurement->reading > _humidityThreshold) 
+        {
+            measurement->overThreshold = true;
+            std::cout << "HUMIDITY OVER THRESHOLD" << std::endl;
+        }
     }
     _storage->addMeasurement(std::move(measurement));
 }
