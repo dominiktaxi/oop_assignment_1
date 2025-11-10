@@ -3,8 +3,40 @@
 #include "measurement-storage.h"
 #include "sensor-manager.h"
 
+void setThreshold(Sensor::TYPE TYPE, SensorManager& manager)
+{
+  std::string type;
+  if (TYPE == Sensor::TYPE::HUMIDITY) {type = "humidity";}
+  if (TYPE == Sensor::TYPE::TEMPERATURE) {type = "temperature";}
+  float threshold;
+  while(true)
+  {
+    system("clear");
+    std::cout << "Set" << type <<  " threshold:" << std::endl;
+    std::cin >> threshold;
+    if(std::cin.fail())
+    {
+      std::cin.clear();
+      std::cin.ignore();
+      std::cout << "Please enter a numeric value" << std::endl;
+      continue;
+    }
+    else if(TYPE == Sensor::TYPE::HUMIDITY && (threshold > 100 || threshold < 1))
+    {
+      std::cout << "Humidity threshold must be set between 1 and 100" << std::endl;
+      continue;
+    }
+    if(TYPE == Sensor::TYPE::HUMIDITY) {manager.setHumidityThreshold(threshold);}
+    if(TYPE == Sensor::TYPE::TEMPERATURE) {manager.setTemperatureThreshold(threshold);}
+    std::cout << "Threshold set" << std::endl;
+    break;
+  }
+
+}
+
 void menu(SensorManager& sensorManager, MeasurementStorage& storage)
 {
+  
   int choice = -1;
   int amountOfSensors = sensorManager.sensors().size();
   while(choice != 0)
@@ -59,6 +91,8 @@ int main()
 { 
   MeasurementStorage storage;
   SensorManager manager(&storage);
+  setThreshold(Sensor::TYPE::HUMIDITY, manager);
+  setThreshold(Sensor::TYPE::TEMPERATURE, manager);
   manager.addSensor(Sensor::UNIT::PERCENTAGE, Sensor::TYPE::HUMIDITY, MinMax{0, 100});
   manager.addSensor(Sensor::UNIT::CELSIUS, Sensor::TYPE::TEMPERATURE, MinMax{0, 4000});
   storage.loadFromHDD();

@@ -23,6 +23,7 @@ std::string localTime()
 
 float average(const std::vector<std::unique_ptr<Measurement>>& measurements, const std::string& type)
 {
+    if (measurements.size() == 0) return 0;
     float total = 0.f;
     int amount = 0;
     float average = 0.f;

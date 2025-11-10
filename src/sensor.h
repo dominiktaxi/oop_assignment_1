@@ -8,12 +8,14 @@ public:
     enum class UNIT
     {
         CELSIUS,
-        PERCENTAGE
+        PERCENTAGE,
+        NONE
     };
     enum class TYPE
     {
         HUMIDITY,
         TEMPERATURE,
+        NONE,
     };
     Sensor(UNIT, TYPE, const MinMax &);
     std::unique_ptr<Measurement> read() const;

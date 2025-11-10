@@ -28,12 +28,12 @@ void MeasurementStorage::saveAlltoHDD()
             if ( measurement->TYPE == Sensor::TYPE::HUMIDITY)
             {
                 humidityReadings << measurement->reading << "," << measurement->unit << "," << measurement->timeStamp << "," 
-                << static_cast<int>(measurement->TYPE) << "," << measurement->type << "\n";
+                << static_cast<int>(measurement->TYPE) << "," << measurement->type << "," << measurement->overThreshold << "\n";
             }
             else if(measurement->TYPE == Sensor::TYPE::TEMPERATURE)
             {
                 temperatureReadings << measurement->reading << "," << measurement->unit << "," << measurement->timeStamp << "," 
-                << static_cast<int>(measurement->TYPE) << "," << measurement->type << "\n";
+                << static_cast<int>(measurement->TYPE) << "," << measurement->type << "," << measurement->overThreshold << "\n";
             }
         }
         temperatureReadings.close();
@@ -47,38 +47,45 @@ void MeasurementStorage::loadFromHDD()
     std::string line;
     std::ifstream temperatureReadings("measurements/temperatureReadings.txt");
     std::ifstream humidityReadings("measurements/humidityReadings.txt");
+    std::string reading, unit, timeStamp, TYPE, type, overThreshold;
     while (getline(temperatureReadings, line, '\n' ))
     {
         std::stringstream ss (line);
-        std::string reading, unit, timeStamp, TYPE, type;
+        
         getline(ss, reading, ',');
         getline(ss, unit, ',');
         getline(ss, timeStamp, ',');
         getline(ss, TYPE, ',');
         getline(ss, type, ',');
+        getline(ss, overThreshold, ',');
         std::unique_ptr<Measurement> measurement = std::make_unique<Measurement>();
         measurement->reading = std::stof(reading);
         measurement->unit = unit;
         measurement->timeStamp = timeStamp;
         measurement->TYPE = static_cast<Sensor::TYPE>(std::stoi(TYPE));
         measurement->type = type;
+        measurement->overThreshold = std::stoi(overThreshold);
         _measurements.push_back(std::move(measurement));
+
+        reading.clear(); unit.clear(); timeStamp.clear(); TYPE.clear(); 
+        type.clear(); overThreshold.clear();
     }
     while (getline(humidityReadings, line, '\n' ))
     {
         std::stringstream ss (line);
-        std::string reading, unit, timeStamp, TYPE, type;
         getline(ss, reading, ',');
         getline(ss, unit, ',');
         getline(ss, timeStamp, ',');
         getline(ss, TYPE, ',');
         getline(ss, type, ',');
+        getline(ss, overThreshold, ',');
         std::unique_ptr<Measurement> measurement = std::make_unique<Measurement>();
         measurement->reading = std::stof(reading);
         measurement->unit = unit;
         measurement->timeStamp = timeStamp;
         measurement->TYPE = static_cast<Sensor::TYPE>(std::stoi(TYPE));
         measurement->type = type;
+        measurement->overThreshold = std::stoi(overThreshold);
         _measurements.push_back(std::move(measurement));
     }
 }
@@ -118,6 +125,8 @@ void MeasurementStorage::printAll() const
     {
         if(measurement->TYPE == Sensor::TYPE::HUMIDITY) type = "Humidity sensor";
         else if(measurement->TYPE == Sensor::TYPE::TEMPERATURE) type = "Temperature sensor";
+
+        if(measurement->overThreshold) {std::cout << "**********"<< type <<" TOO HIGH***********\n";}
         std::cout << "Type: " << type << std::endl;
         std::cout << "Date: " << measurement->timeStamp << std::endl;
         std::cout << "Measurement: " << measurement->reading << " " << measurement->unit << std::endl << std::endl;

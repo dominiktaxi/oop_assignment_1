@@ -14,7 +14,18 @@ void SensorManager::store(int i)
         std::cerr << "Index out of range" << std::endl;
         return;
     }
-    _storage->addMeasurement(_sensors[i - 1]->read());
+    std::unique_ptr<Measurement> measurement = _sensors[i - 1]->read();
+    if(measurement->TYPE == Sensor::TYPE::TEMPERATURE)
+    {
+        if(measurement->reading > _temperatureThreshold) {measurement->overThreshold = true;}
+        std::cout << "TEMPERATURE OVER THRESHOLD" << std::endl;
+    }
+    else if(measurement->TYPE == Sensor::TYPE::HUMIDITY)
+    {
+        if(measurement->reading > _humidityThreshold) {measurement->overThreshold = true;}
+        std::cout << "HUMIDITY OVER THRESHOLD" << std::endl;
+    }
+    _storage->addMeasurement(std::move(measurement));
 }
 
 void SensorManager::printAll() const
@@ -43,4 +54,14 @@ void SensorManager::sortByType()
 const std::vector<std::unique_ptr<Sensor>>& SensorManager::sensors() const
 {
     return _sensors;
+}
+
+void SensorManager::setTemperatureThreshold(float t)
+{
+    _temperatureThreshold = t;
+}
+
+void SensorManager::setHumidityThreshold(float h)
+{
+    _humidityThreshold = h;
 }

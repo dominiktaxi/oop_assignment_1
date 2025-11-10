@@ -9,4 +9,5 @@ struct Measurement
     std::string type;
     Sensor::TYPE TYPE;
     float reading;
+    bool overThreshold;
 };
