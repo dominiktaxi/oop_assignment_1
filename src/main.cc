@@ -93,8 +93,8 @@ int main()
   SensorManager manager(&storage);
   setThreshold(Sensor::TYPE::HUMIDITY, manager);
   setThreshold(Sensor::TYPE::TEMPERATURE, manager);
-  manager.addSensor(Sensor::UNIT::PERCENTAGE, Sensor::TYPE::HUMIDITY, MinMax{0, 100});
-  manager.addSensor(Sensor::UNIT::CELSIUS, Sensor::TYPE::TEMPERATURE, MinMax{0, 4000});
+  manager.addSensor(Sensor::UNIT::PERCENTAGE, Sensor::TYPE::HUMIDITY, MinMax{0.f, 100.f});
+  manager.addSensor(Sensor::UNIT::CELSIUS, Sensor::TYPE::TEMPERATURE, MinMax{-50.f, 150.f});
   storage.loadFromHDD();
   menu(manager, storage);
 
