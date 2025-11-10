@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#include "measurement.h"
 
 float randomFloat(float min, float max)
 {
@@ -23,17 +23,21 @@ std::string localTime()
 
 float average(const std::vector<std::unique_ptr<Measurement>>& measurements, const std::string& type)
 {
+    if (measurements.size() == 0) return 0;
     float total = 0.f;
     int amount = 0;
+    float average = 0.f;
     for(const auto& measurement : measurements)
     {
         if(measurement->type == type)
         {
-            total += measurement->measurement;
+            total += measurement->reading;
             amount++;
         }
     }
-    return total / static_cast<float>(amount);
+    average = total / static_cast<float>(amount);
+    float roundedAverage = std::round(average * 100) / 100;
+    return roundedAverage;
 }
 
 MinMax minMax(const std::vector<std::unique_ptr<Measurement>>& measurements, const std::string& type)
@@ -46,14 +50,14 @@ MinMax minMax(const std::vector<std::unique_ptr<Measurement>>& measurements, con
     {
         if(measurement->type == type)
         {
-            if(!first_hit) {min = measurement->measurement;}
-            if(max < measurement->measurement)
+            if(!first_hit) {min = measurement->reading;}
+            if(max < measurement->reading)
             {
-                max = measurement->measurement;
+                max = measurement->reading;
             }
-            if(min > measurement->measurement)
+            if(min > measurement->reading)
             {
-                min = measurement->measurement;
+                min = measurement->reading;
             }
             first_hit = true;
         }

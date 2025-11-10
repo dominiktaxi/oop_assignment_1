@@ -8,24 +8,24 @@ public:
     enum class UNIT
     {
         CELSIUS,
-        FAHRENHEIT,
-        KELVIN,
-        PERCENTAGE
+        PERCENTAGE,
+        NONE
     };
     enum class TYPE
     {
         HUMIDITY,
         TEMPERATURE,
-        SPEED
+        NONE,
     };
-    Sensor(UNIT, TYPE, const std::string &, const MinMax &);
+    Sensor(UNIT, TYPE, const MinMax &);
     std::unique_ptr<Measurement> read() const;
+    TYPE type() const;
+    const std::string& name() const;
 
 private:
-    std::string _name;
     std::string _type;
     std::string _unit;
-    const UNIT _Unit;
-    const TYPE _Type;
+    const UNIT _UNIT;
+    const TYPE _TYPE;
     const MinMax _minMax;
 };

@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "sensor.h"
 struct Measurement
 {
-    std::string name;
     std::string timeStamp;
     std::string unit;
     std::string type;
-    float measurement;
+    Sensor::TYPE TYPE;
+    float reading;
+    bool overThreshold;
 };
