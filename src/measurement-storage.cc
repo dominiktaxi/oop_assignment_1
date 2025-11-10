@@ -14,28 +14,32 @@ void MeasurementStorage::addMeasurement(std::unique_ptr<Measurement> measurement
 
 void MeasurementStorage::saveAlltoHDD()
 {
-    std::ofstream humidityReadings ("measurements/humidityReadings.txt", std::ios::app);
-    std::ofstream temperatureReadings ("measurements/temperatureReadings.txt", std::ios::app);
-    if(!humidityReadings || !temperatureReadings)
+    if(_measurements.size() > 0)
     {
-        std::cerr << "Failed to create file" << std::endl;
-        return;
-    }
-    for (const auto& measurement : _measurements)
-    {
-        if ( measurement->TYPE == Sensor::TYPE::HUMIDITY)
+        std::ofstream humidityReadings ("measurements/humidityReadings.txt", std::ios::app);
+        std::ofstream temperatureReadings ("measurements/temperatureReadings.txt", std::ios::app);
+        if(!humidityReadings || !temperatureReadings)
         {
-            humidityReadings << measurement->reading << "," << measurement->unit << "," << measurement->timeStamp << "," 
-            << static_cast<int>(measurement->TYPE) << "," << measurement->type << "\n";
+            std::cerr << "Failed to create file" << std::endl;
+            return;
         }
-        else if(measurement->TYPE == Sensor::TYPE::TEMPERATURE)
+        for (const auto& measurement : _measurements)
         {
-            temperatureReadings << measurement->reading << "," << measurement->unit << "," << measurement->timeStamp << "," 
-            << static_cast<int>(measurement->TYPE) << "," << measurement->type << "\n";
+            if ( measurement->TYPE == Sensor::TYPE::HUMIDITY)
+            {
+                humidityReadings << measurement->reading << "," << measurement->unit << "," << measurement->timeStamp << "," 
+                << static_cast<int>(measurement->TYPE) << "," << measurement->type << "\n";
+            }
+            else if(measurement->TYPE == Sensor::TYPE::TEMPERATURE)
+            {
+                temperatureReadings << measurement->reading << "," << measurement->unit << "," << measurement->timeStamp << "," 
+                << static_cast<int>(measurement->TYPE) << "," << measurement->type << "\n";
+            }
         }
+        temperatureReadings.close();
+        humidityReadings.close();
     }
-    temperatureReadings.close();
-    humidityReadings.close();
+    else {std::cout << "No data was saved" << std::endl;}
 }
 
 void MeasurementStorage::loadFromHDD()
@@ -60,6 +64,51 @@ void MeasurementStorage::loadFromHDD()
         measurement->type = type;
         _measurements.push_back(std::move(measurement));
     }
+    while (getline(humidityReadings, line, '\n' ))
+    {
+        std::stringstream ss (line);
+        std::string reading, unit, timeStamp, TYPE, type;
+        getline(ss, reading, ',');
+        getline(ss, unit, ',');
+        getline(ss, timeStamp, ',');
+        getline(ss, TYPE, ',');
+        getline(ss, type, ',');
+        std::unique_ptr<Measurement> measurement = std::make_unique<Measurement>();
+        measurement->reading = std::stof(reading);
+        measurement->unit = unit;
+        measurement->timeStamp = timeStamp;
+        measurement->TYPE = static_cast<Sensor::TYPE>(std::stoi(TYPE));
+        measurement->type = type;
+        _measurements.push_back(std::move(measurement));
+    }
+}
+
+void MeasurementStorage::eraseData()
+{
+    if(!std::remove("measurements/temperatureReadings.txt"))
+    {
+        std::cout << "Temperature readings file erased" << std::endl;
+    }
+    else {std::cout << "No temperature readings stored" << std::endl;}
+
+    if(!std::remove("measurements/humidityReadings.txt"))
+    {
+        std::cout << "Humidity readings file erased" << std::endl;
+    }
+    else {std::cout << "No humidity readings stored" << std::endl;}
+    if(_measurements.size() > 0)
+    {
+    _measurements.clear();
+    }
+    else {std::cout << "Nothing to clear in memory" << std::endl;}
+}
+
+float MeasurementStorage::average(Sensor::TYPE TYPE) const
+{
+    std::string type;
+    if(TYPE == Sensor::TYPE::HUMIDITY) type = "humidity";
+    if(TYPE == Sensor::TYPE::TEMPERATURE) type = "temperature";
+    return ::average(_measurements, type);
 }
 
 void MeasurementStorage::printAll() const

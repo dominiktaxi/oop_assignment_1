@@ -25,6 +25,7 @@ float average(const std::vector<std::unique_ptr<Measurement>>& measurements, con
 {
     float total = 0.f;
     int amount = 0;
+    float average = 0.f;
     for(const auto& measurement : measurements)
     {
         if(measurement->type == type)
@@ -33,7 +34,9 @@ float average(const std::vector<std::unique_ptr<Measurement>>& measurements, con
             amount++;
         }
     }
-    return total / static_cast<float>(amount);
+    average = total / static_cast<float>(amount);
+    float roundedAverage = std::round(average * 100) / 100;
+    return roundedAverage;
 }
 
 MinMax minMax(const std::vector<std::unique_ptr<Measurement>>& measurements, const std::string& type)

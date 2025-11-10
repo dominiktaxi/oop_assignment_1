@@ -1,4 +1,5 @@
 #include <memory>
+#include <cmath>
 #include "sensor.h"
 #include "measurement.h"
 
@@ -21,6 +22,7 @@ Sensor::Sensor(UNIT unit, TYPE type, const MinMax &minMax) :  _UNIT(unit), _TYPE
 std::unique_ptr<Measurement> Sensor::read() const
 {
     float reading = randomFloat(_minMax.min, _minMax.max);
+    reading = std::round(reading * 100) / 100;
     auto measurement = std::make_unique<Measurement>();
     measurement->TYPE = _TYPE;
     measurement->type = _type;

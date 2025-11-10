@@ -12,8 +12,12 @@ void menu(SensorManager& sensorManager, MeasurementStorage& storage)
     
     std::cout << "Choose wich sensor to read and collect data from\n" << std::endl;
     sensorManager.printAll();
-    std::cout << amountOfSensors + 1 << "Print all measurements\n0.Exit" << std::endl;
-    std::cout << amountOfSensors + 2 << "Sort by type" << std::endl;
+    std::cout << amountOfSensors + 1 << ".Print all measurements\n" << std::endl;
+    std::cout << amountOfSensors + 2 << ".Sort by type" << std::endl;
+    std::cout << amountOfSensors + 3 << ".Erase data from HDD" << std::endl;
+    std::cout << amountOfSensors + 4 << ".Get average temperature" << std::endl;
+    std::cout << amountOfSensors + 5 << ".Get average humidity" << std::endl;
+    std::cout << "0.Exit" << std::endl;
     std::cin >> choice;
     system("clear");
     if(std::cin.fail())
@@ -34,6 +38,18 @@ void menu(SensorManager& sensorManager, MeasurementStorage& storage)
     else if (choice == amountOfSensors + 2)
     {
       sensorManager.sortByType();
+    }
+    else if (choice == amountOfSensors + 3)
+    {
+      storage.eraseData();
+    }
+    else if (choice == amountOfSensors + 4)
+    {
+      std::cout << storage.average(Sensor::TYPE::TEMPERATURE) << std::endl;
+    }
+    else if (choice == amountOfSensors + 5)
+    {
+      std::cout << storage.average(Sensor::TYPE::HUMIDITY) << std::endl;
     }
   }
   
